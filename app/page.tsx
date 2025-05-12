@@ -8,7 +8,7 @@ export default function Home() {
       <div className="max-w-4xl mx-auto text-center">
         <div className="mb-6 md:mb-8 flex justify-center">
           <Image
-            src="/images/babyslotterylogo-circular.png"
+            src="/images/LOGOPRINCIPAL.png" // <-- CORREGIDO AQUÍ
             alt="Baby's Lottery"
             width={240}
             height={240}

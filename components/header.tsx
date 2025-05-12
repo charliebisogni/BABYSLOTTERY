@@ -59,7 +59,7 @@ export function Header() {
         <Link href="/" className="flex items-center gap-2 z-10">
           <div className="w-10 h-10 relative flex-shrink-0">
             <Image
-              src="/images/babyslotterylogo-circular.png"
+              src="/images/LOGOPRINCIPAL.png" // <-- CORREGIDO AQUÍ
               alt="Logo de Baby's Lottery"
               fill
               sizes="(max-width: 768px) 40px, 40px"
@@ -109,7 +109,7 @@ export function Header() {
             <div className="flex items-center gap-2 mb-6">
               <div className="w-8 h-8 relative">
                 <Image
-                  src="/images/babyslotterylogo-circular.png"
+                  src="/images/LOGOPRINCIPAL.png" // <-- CORREGIDO AQUÍ
                   alt="Logo de Baby's Lottery"
                   fill
                   sizes="32px"
