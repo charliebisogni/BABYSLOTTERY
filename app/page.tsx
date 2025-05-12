@@ -8,11 +8,12 @@ export default function Home() {
       <div className="max-w-4xl mx-auto text-center">
         <div className="mb-6 md:mb-8 flex justify-center">
           <Image
-            src="/placeholder.svg?height=200&width=200"
-            alt="Baby Lottery"
-            width={150}
-            height={150}
-            className="rounded-full bg-pink-100 p-3 md:p-4 md:w-[200px] md:h-[200px]"
+            src="/images/babyslotterylogo-circular.png"
+            alt="Baby's Lottery"
+            width={240}
+            height={240}
+            className="object-contain"
+            priority
           />
         </div>
 
