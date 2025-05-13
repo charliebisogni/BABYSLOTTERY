@@ -1,6 +1,7 @@
 "use client"
 
-import { useToast } from "@/hooks/use-toast"
+// Importa la FUNCIÓN `toast` directamente, NO el hook `useToast`
+import { toast } from "@/hooks/use-toast" 
 
 interface SendEmailProps {
   endpoint: string
@@ -17,7 +18,7 @@ export async function sendEmail({
   errorMessage,
   onSuccess,
 }: SendEmailProps): Promise<boolean> {
-  const { toast } = useToast()
+  // YA NO SE LLAMA A useToast() AQUÍ
 
   try {
     const response = await fetch(endpoint, {
@@ -30,9 +31,14 @@ export async function sendEmail({
 
     if (!response.ok) {
       const errorData = await response.json()
-      throw new Error(errorData.error || "Error en la solicitud")
+      // Intenta obtener un mensaje más específico si es posible
+      const message = errorData.message || errorData.error || "Error en la respuesta del servidor";
+      console.error("Error en respuesta del servidor:", errorData);
+      throw new Error(message)
     }
 
+    // La función toast se puede llamar directamente porque fue exportada
+    // y maneja su propio estado globalmente.
     toast({
       title: "¡Notificación enviada! ✉️",
       description: successMessage,
@@ -43,11 +49,12 @@ export async function sendEmail({
     }
 
     return true
-  } catch (error) {
+  } catch (error: any) { // Especificar 'any' o un tipo más específico para error
     console.error("Error al enviar notificación:", error)
     toast({
       title: "Error al enviar notificación ❌",
-      description: errorMessage,
+      // Usar error.message si está disponible, sino el errorMessage por defecto
+      description: error.message || errorMessage, 
       variant: "destructive",
     })
     return false
