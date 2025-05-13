@@ -74,6 +74,10 @@ export const createClientSupabaseClient = () => {
   const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
   if (!supabaseUrl || !supabaseKey) {
+    console.error("Variables de entorno de Supabase no disponibles:", {
+      url: !!supabaseUrl,
+      key: !!supabaseKey,
+    })
     throw new Error("Faltan las variables de entorno de Supabase")
   }
 

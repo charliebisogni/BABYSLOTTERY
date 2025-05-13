@@ -11,13 +11,12 @@ import { createClientSupabaseClient, hashPassword } from "@/lib/supabase"
 import { Loader2 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
 import { SqlInstructions } from "@/components/sql-instructions"
-// Importar la función sendEmail
-import { sendEmail } from "@/components/notification-toast"
 
 export default function CrearEventoPage() {
   const router = useRouter()
   const { toast } = useToast()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [debugInfo, setDebugInfo] = useState<string | null>(null)
 
   // Estado del formulario
   const [formData, setFormData] = useState({
@@ -81,6 +80,7 @@ export default function CrearEventoPage() {
     if (!validateForm()) return
 
     setIsSubmitting(true)
+    setDebugInfo(null)
 
     try {
       const supabase = createClientSupabaseClient()
@@ -92,7 +92,8 @@ export default function CrearEventoPage() {
         .eq("email_admin", formData.email)
         .maybeSingle()
 
-      if (checkError && checkError.code !== "PGRST116") {
+      if (checkError) {
+        setDebugInfo(`Error al verificar email existente: ${JSON.stringify(checkError)}`)
         throw checkError
       }
 
@@ -106,64 +107,41 @@ export default function CrearEventoPage() {
       const hashedPassword = hashPassword(formData.password)
       const hashedParticipantPassword = hashPassword(formData.contrasenaParticipantes)
 
-      console.log("Registrando bebé:", {
-        nombre_evento: formData.nombreEvento,
-        identificador_publico: formData.identificadorPublico,
-        email_admin: formData.email,
-        // No mostramos las contraseñas hasheadas por seguridad
-      })
-
-      // Preparar los datos básicos que sabemos que existen en la tabla
+      // Preparar los datos para insertar
       const eventData = {
         nombre_evento: formData.nombreEvento,
+        identificador_publico: formData.identificadorPublico,
+        contrasena_participantes_hash: hashedParticipantPassword,
         email_admin: formData.email,
         password_hash: hashedPassword,
+        fecha_creacion: new Date().toISOString(),
       }
 
-      // Intentar insertar solo con los campos básicos
-      try {
-        const { data: basicData, error: basicError } = await supabase.from("eventos_bebe").insert([eventData]).select()
+      // Insertar el nuevo evento
+      const { data: newEvent, error: insertError } = await supabase.from("eventos_bebe").insert([eventData]).select()
 
-        if (basicError) {
-          throw basicError
-        }
-
-        if (!basicData || basicData.length === 0) {
-          throw new Error("No se recibieron datos después de registrar el bebé")
-        }
-
-        if (basicData && basicData.length > 0) {
-          console.log("Bebé registrado con ID (campos básicos):", basicData[0].id)
-
-          toast({
-            title: "¡Bebé registrado! 🎉",
-            description:
-              "Tu bebé ha sido registrado correctamente. Para habilitar todas las funciones de privacidad, contacta al administrador.",
-          })
-
-          // Enviar correo de bienvenida
-          await sendEmail({
-            endpoint: "/api/send-welcome-email",
-            data: {
-              email_padres: formData.email,
-              nombre_bebe_identificador: formData.identificadorPublico,
-              contrasena_participantes: formData.contrasenaParticipantes,
-            },
-            successMessage: "Te hemos enviado un correo de bienvenida con los detalles 📧",
-            errorMessage: "No pudimos enviar el correo de bienvenida, pero tu bebé ha sido registrado correctamente",
-          })
-
-          // Redirigir a la página de login
-          router.push("/login-papas")
-        }
-      } catch (basicError) {
-        console.error("Error al insertar bebé con campos básicos:", basicError)
-        throw basicError
+      if (insertError) {
+        setDebugInfo(`Error al insertar evento: ${JSON.stringify(insertError)}`)
+        throw insertError
       }
-    } catch (error) {
-      console.error("Error al registrar bebé:", error)
+
       toast({
-        title: "Error ❌",
+        title: "¡Bebé registrado! 🎉",
+        description: "Tu bebé ha sido registrado correctamente. Ahora puedes iniciar sesión.",
+      })
+
+      // Redirigir a la página de login
+      router.push("/login-papas")
+    } catch (error: any) {
+      console.error("Error al registrar bebé:", error)
+
+      // Mostrar información de depuración más detallada
+      if (!debugInfo) {
+        setDebugInfo(`Error: ${error.message || JSON.stringify(error)}`)
+      }
+
+      toast({
+        title: "Error al registrar ❌",
         description: "Hubo un problema al registrar el bebé. Por favor, intenta nuevamente.",
         variant: "destructive",
       })
@@ -252,6 +230,13 @@ export default function CrearEventoPage() {
                 />
               </div>
             </div>
+
+            {debugInfo && (
+              <div className="p-3 bg-red-50 border border-red-200 rounded-md text-red-600 text-xs overflow-auto max-h-32">
+                <p className="font-semibold">Información de depuración:</p>
+                <pre>{debugInfo}</pre>
+              </div>
+            )}
           </CardContent>
           <CardFooter>
             <Button type="submit" className="w-full" disabled={isSubmitting}>
