@@ -8,7 +8,15 @@ const nextConfig = {
   },
   images: {
     unoptimized: true,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'i.postimg.cc',
+        port: '',
+        pathname: '/**', // Permite cualquier ruta dentro de ese hostname
+      },
+    ],
   },
-}
+};
 
-export default nextConfig
+export default nextConfig;

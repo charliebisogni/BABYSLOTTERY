@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 
 export default function Home() {
@@ -6,7 +7,14 @@ export default function Home() {
     <div className="container mx-auto px-4 py-8 md:py-12">
       <div className="max-w-4xl mx-auto text-center">
         <div className="mb-6 md:mb-8 flex justify-center">
-          <img src="/images/LOGOPRINCIPAL.png" alt="Baby's Lottery" className="w-60 h-60 object-contain" />
+          <Image
+            src="https://i.postimg.cc/qM4jVGt7/LOGOPRINCIPAL.png"
+            alt="Baby's Lottery"
+            width={360}
+            height={360}
+            className="object-contain"
+            priority
+          />
         </div>
 
         <h1 className="text-3xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-pink-500 to-blue-500 bg-clip-text text-transparent px-2">

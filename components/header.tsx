@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { useAuth } from "@/contexts/auth-context"
 import {
@@ -56,11 +57,14 @@ export function Header() {
     <header className="bg-gradient-to-r from-pink-100 to-blue-100 py-4 px-6 shadow-sm">
       <div className="container mx-auto flex justify-between items-center">
         <Link href="/" className="flex items-center gap-2 z-10">
-          <div className="w-10 h-10 relative flex-shrink-0">
-            <img
-              src="/images/LOGOPRINCIPAL.png"
+          <div className="w-[3.75rem] h-[3.75rem] relative flex-shrink-0">
+            <Image
+              src="https://i.postimg.cc/qM4jVGt7/LOGOPRINCIPAL.png"
               alt="Logo de Baby's Lottery"
-              className="object-contain w-full h-full"
+              fill
+              sizes="(max-width: 768px) 60px, 60px"
+              className="object-contain"
+              priority
             />
           </div>
           <span className="text-xl sm:text-2xl font-bold text-pink-600 hidden sm:inline">BABY&apos;S LOTTERY</span>
@@ -103,11 +107,13 @@ export function Header() {
           </SheetTrigger>
           <SheetContent side="right" className="w-[250px] sm:w-[300px]">
             <div className="flex items-center gap-2 mb-6">
-              <div className="w-8 h-8 relative">
-                <img
-                  src="/images/LOGOPRINCIPAL.png"
+              <div className="w-12 h-12 relative">
+                <Image
+                  src="https://i.postimg.cc/qM4jVGt7/LOGOPRINCIPAL.png"
                   alt="Logo de Baby's Lottery"
-                  className="object-contain w-full h-full"
+                  fill
+                  sizes="48px"
+                  className="object-contain"
                 />
               </div>
               <span className="font-bold text-pink-600">BABY&apos;S LOTTERY</span>

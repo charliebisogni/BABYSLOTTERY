@@ -13,6 +13,10 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "BABY'S LOTTERY - Juego de Adivinanzas para Baby Shower",
   description: "Adivina cómo será nuestro bebé y gana un premio",
+  icons: {
+    icon: [{ url: "https://i.postimg.cc/qM4jVGt7/LOGOPRINCIPAL.png", type: "image/png" }],
+    apple: [{ url: "https://i.postimg.cc/qM4jVGt7/LOGOPRINCIPAL.png" }],
+  },
     generator: 'v0.dev'
 }
 
@@ -23,6 +27,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="es">
+      <head>
+        <link rel="icon" href="https://i.postimg.cc/qM4jVGt7/LOGOPRINCIPAL.png" />
+      </head>
       <body className={`${inter.className} min-h-screen flex flex-col`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false} disableTransitionOnChange>
           <AuthProvider>
